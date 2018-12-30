@@ -7,25 +7,32 @@ import pl.tw.foodsearchingapp.model.Restaurant
 
 class PizzaPortalRestaurantsScraper {
 
+    private val baseUrl = "https://pizzaportal.pl"
+
     fun scrap(city: String, street: String, streetNumber: Int, postalCode: String, flatNumber: Int): List<Restaurant> {
-        val document = Jsoup.connect("https://pizzaportal.pl/$city/restauracje/ul-${street.replace(" ", "-")}/$streetNumber/$postalCode/$flatNumber/").get()
-        val elements = document.select("div[class=restaurant-list-item-row-1]")
+        val document = Jsoup.connect("$baseUrl/$city/restauracje/ul-${street.replace(" ", "-")}/$streetNumber/$postalCode/$flatNumber/").get()
+        val restaurantList = document.select("div[class=restaurant-list]")
+        val elements = restaurantList.select("a")
 
         val restaurants: MutableList<Restaurant> = mutableListOf()
         for (element in elements) {
+
+            val endpoint = element.attr("href")
+            val restaurantListItem = element.selectFirst("div[class=restaurant-list-item-row-1]")
+
             if (isRestaurantClosed(element)) {
                 break
             }
 
-            val deliveryFee = getRestaurantInfoElement(element, "div[class=restaurant-payment-infos-delivery-fee]")
-            val minimumOrderValue = getRestaurantInfoElement(element, "div[class=restaurant-payment-infos-minimum-order-value]")
-            val distance = getRestaurantInfoElement(element, "div[class=restaurant-distance-info]")
-            val name = element.select("h2[class=restaurant-list-item-name]").text()
-            val categories = element.select("p[class=restaurant-list-item-food-types]").text()
+            val deliveryFee = getRestaurantInfoElement(restaurantListItem, "div[class=restaurant-payment-infos-delivery-fee]")
+            val minimumOrderValue = getRestaurantInfoElement(restaurantListItem, "div[class=restaurant-payment-infos-minimum-order-value]")
+            val distance = getRestaurantInfoElement(restaurantListItem, "div[class=restaurant-distance-info]")
+            val name = restaurantListItem.select("h2[class=restaurant-list-item-name]").text()
+            val categories = restaurantListItem.select("p[class=restaurant-list-item-food-types]").text()
                     .split(",")
                     .map { it.trim() }
 
-            restaurants.add(Restaurant(name, minimumOrderValue, distance, deliveryFee, categories))
+            restaurants.add(Restaurant(name, minimumOrderValue, distance, deliveryFee, baseUrl + endpoint, categories))
         }
         return restaurants
     }
