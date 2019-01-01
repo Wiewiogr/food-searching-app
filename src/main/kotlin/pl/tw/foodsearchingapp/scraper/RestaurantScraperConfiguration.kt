@@ -8,6 +8,14 @@ import org.springframework.context.annotation.Configuration
 class RestaurantScraperConfiguration {
 
     @Bean
-    fun pizzaPortalRestaurantScraper() = PizzaPortalRestaurantsScraper()
+    fun pizzaPortalRestaurantMenuScraper(pizzaPortalBaseUrl: String) =
+            PizzaPortalRestaurantMenuScraper(pizzaPortalBaseUrl)
+
+    @Bean
+    fun pizzaPortalRestaurantScraper(pizzaPortalBaseUrl: String) =
+            PizzaPortalRestaurantsScraper(pizzaPortalBaseUrl)
+
+    @Bean
+    fun pizzaPortalBaseUrl() = "https://pizzaportal.pl"
 
 }

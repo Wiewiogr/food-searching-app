@@ -2,12 +2,11 @@ package pl.tw.foodsearchingapp.scraper
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import org.springframework.beans.factory.annotation.Qualifier
 import pl.tw.foodsearchingapp.model.Restaurant
 
 
-class PizzaPortalRestaurantsScraper {
-
-    private val baseUrl = "https://pizzaportal.pl"
+class PizzaPortalRestaurantsScraper(@Qualifier("scraping.pizzaportal.url") val baseUrl: String) {
 
     fun scrap(city: String, street: String, streetNumber: Int, postalCode: String, flatNumber: Int): List<Restaurant> {
         val document = Jsoup.connect("$baseUrl/$city/restauracje/ul-${street.replace(" ", "-")}/$streetNumber/$postalCode/$flatNumber/").get()
