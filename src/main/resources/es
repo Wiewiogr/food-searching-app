@@ -1,0 +1,58 @@
+GET menu_items/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "kebas",
+      "fields": [
+        "category",
+        "name",
+        "description"
+      ],
+      "fuzziness": "AUTO"
+    }
+  }
+}
+
+PUT menu_items
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "name": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "price": {
+          "type": "double"
+        },
+        "category": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}
+
+DELETE menu_items
+
+POST menu_items/_doc
+{
+  "name": "Pizza 51",
+  "price": 21.4,
+  "description": "balkjfksdljfkljsdklfajsadklfjklasdf sdfajsdlkjfakljsdklfajklsdjfalksdjflkjasdlkfjalskdjflkasjdflkjasdlkfj",
+  "category": "pizza"
+}
+
+POST menu_items/_doc
+{
+  "name": "Szwagier",
+  "price": 11.4,
+  "description": "balkjfksdljfkljsdklfajsadklfjklasdf sdfajsdlkjfakljsdklfajklsdjfalksdjflkjasdlkfjalskdjflkasjdflkjasdlkfj",
+  "category": "kebab"
+}

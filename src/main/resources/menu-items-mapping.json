@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "name": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "price": {
+          "type": "double"
+        },
+        "category": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}

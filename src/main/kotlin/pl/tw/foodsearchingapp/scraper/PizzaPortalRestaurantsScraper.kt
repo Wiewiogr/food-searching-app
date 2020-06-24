@@ -3,11 +3,11 @@ package pl.tw.foodsearchingapp.scraper
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Qualifier
+import pl.tw.foodsearchingapp.foodsearch.AddressInformation
 import pl.tw.foodsearchingapp.model.Restaurant
-import pl.tw.foodsearchingapp.restaurant.AddressInformation
 
 
-class PizzaPortalRestaurantsScraper(@Qualifier("scraping.pizzaportal.url") val baseUrl: String) {
+class PizzaPortalRestaurantsScraper(@Qualifier("scraping.pizzaportal.url") private val baseUrl: String) {
 
     fun scrap(addrInfo: AddressInformation): List<Restaurant> {
         val document = Jsoup.connect("$baseUrl/" +
@@ -38,7 +38,7 @@ class PizzaPortalRestaurantsScraper(@Qualifier("scraping.pizzaportal.url") val b
                     .split(",")
                     .map { it.trim() }
 
-            restaurants.add(Restaurant(name, minimumOrderValue, distance, deliveryFee, baseUrl + endpoint, categories))
+            restaurants.add(Restaurant(name, minimumOrderValue, distance, deliveryFee, endpoint, categories))
         }
         return restaurants
     }
